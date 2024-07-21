@@ -35,6 +35,7 @@ public class WebSecurityConfig {
                         authorization -> authorization.requestMatchers("/auth/login").permitAll() // 로그인 경로 허용
                                 .requestMatchers("/auth/signup").permitAll() // 회원가입 경로 허용
                                 .requestMatchers(HttpMethod.GET, "/posts/{articleNo}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/posts").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
