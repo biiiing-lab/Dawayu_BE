@@ -1,4 +1,4 @@
-package org.example.dawayu_be.users.dto;
+package org.example.dawayu_be.global;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class StatusResponse {
     private int status;
-    private String TokenOrMessage;
+    private String Message;
 }
