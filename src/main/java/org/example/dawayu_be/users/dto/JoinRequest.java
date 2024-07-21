@@ -1,12 +1,13 @@
 package org.example.dawayu_be.users.dto;
 
-import lombok.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.example.dawayu_be.users.Users;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Data
 @RequiredArgsConstructor
 public class JoinRequest {
+
     private String userId;
     private String password;
     private String nickName;
@@ -22,6 +23,6 @@ public class JoinRequest {
     }
 
     public void password(String password) {
-        this.password= password;
+        this.password = password;
     }
 }

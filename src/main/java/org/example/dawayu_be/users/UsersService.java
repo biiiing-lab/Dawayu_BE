@@ -35,6 +35,7 @@ public class UsersService {
 
     @Transactional
     public ResponseEntity<StatusResponse> signUp(JoinRequest joinRequest) {
+
         // 유효성 검증
         if(usersRepository.existsByUserId(joinRequest.getUserId())) {
             return ResponseEntity.ok(new StatusResponse(HttpStatus.NO_CONTENT.value(), "이미 사용중인 사용자 이름입니다."));
