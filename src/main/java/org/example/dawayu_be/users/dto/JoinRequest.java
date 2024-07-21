@@ -7,9 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Data
 @RequiredArgsConstructor
 public class JoinRequest {
-
-    private final PasswordEncoder passwordEncoder;
-
     private String userId;
     private String password;
     private String nickName;
@@ -18,9 +15,13 @@ public class JoinRequest {
     public Users toEntity() {
         return Users.builder()
                 .userId(userId)
-                .password(passwordEncoder.encode(password))
+                .password(password)
                 .nickName(nickName)
                 .email(email)
                 .build();
+    }
+
+    public void password(String password) {
+        this.password= password;
     }
 }
