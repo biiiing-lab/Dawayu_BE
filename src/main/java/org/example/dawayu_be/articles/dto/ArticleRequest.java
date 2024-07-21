@@ -8,7 +8,6 @@ import org.example.dawayu_be.users.Users;
 
 @Data
 @RequiredArgsConstructor
-@Setter
 public class ArticleRequest {
     private String title;
     private String content;

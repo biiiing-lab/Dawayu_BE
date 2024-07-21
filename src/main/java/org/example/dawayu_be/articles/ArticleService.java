@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
+import org.example.dawayu_be.articles.dto.ArticleAllResponse;
 import org.example.dawayu_be.articles.dto.ArticleDetailResponse;
 import org.example.dawayu_be.articles.dto.ArticleRequest;
 import org.example.dawayu_be.global.StatusResponse;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +59,18 @@ public class ArticleService {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ArticleAllResponse>> all() {
+        List<Articles> articles = articleRepository.findAllByOrderByPostRegisterDateDesc();
+        List<ArticleAllResponse> responses = articles.stream()
+                .map(article -> new ArticleAllResponse(
+                        article.getTitle(),
+                        article.getUserNo().getNickName(),
+                        article.getPostRegisterDate()))
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 }
