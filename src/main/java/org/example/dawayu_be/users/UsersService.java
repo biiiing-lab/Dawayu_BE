@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dawayu_be.jwt.JwtTokenProvider;
 import org.example.dawayu_be.users.dto.JoinRequest;
 import org.example.dawayu_be.users.dto.LoginRequest;
-import org.example.dawayu_be.users.dto.StatusResponse;
+import org.example.dawayu_be.global.StatusResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

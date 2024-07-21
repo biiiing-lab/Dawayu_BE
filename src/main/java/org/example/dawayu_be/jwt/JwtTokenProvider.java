@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dawayu_be.users.Users;
 import org.example.dawayu_be.users.UsersRepository;
-import org.example.dawayu_be.users.dto.StatusResponse;
+import org.example.dawayu_be.global.StatusResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
