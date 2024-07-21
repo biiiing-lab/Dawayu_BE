@@ -35,5 +35,9 @@ public class Articles {
     @JoinColumn(name = "userNo")
     private Users userNo;
 
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
 }

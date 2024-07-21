@@ -7,6 +7,7 @@ import org.apache.coyote.Response;
 import org.example.dawayu_be.articles.dto.ArticleAllResponse;
 import org.example.dawayu_be.articles.dto.ArticleDetailResponse;
 import org.example.dawayu_be.articles.dto.ArticleRequest;
+import org.example.dawayu_be.articles.dto.ArticleUpdateRequest;
 import org.example.dawayu_be.global.StatusResponse;
 import org.example.dawayu_be.users.Users;
 import org.example.dawayu_be.users.UsersRepository;
@@ -72,5 +73,39 @@ public class ArticleService {
                 .toList();
 
         return ResponseEntity.ok(responses);
+    }
+
+    @Transactional
+    public ResponseEntity<StatusResponse> update(Long articleNo, ArticleUpdateRequest updateRequest) {
+        Articles articles = articleRepository.findById(articleNo).orElseThrow();
+        if (checkAuth(articles.getUserNo())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "수정할 수 없습니다."));
+        }
+
+        articles.update(updateRequest.getTitle(), updateRequest.getContent());
+       return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "게시글 수정 성공"));
+    }
+
+    @Transactional
+    public ResponseEntity<StatusResponse> delete(Long articleNo) {
+        Articles articles = articleRepository.findById(articleNo).orElseThrow();
+        if (checkAuth(articles.getUserNo())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "삭제할 수 없습니다."));
+        }
+
+        articleRepository.deleteById(articleNo);
+        return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "게시글 삭제 성공"));
+    }
+
+    private boolean checkAuth(Users users) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users realUsers = usersRepository.findByUserId(userDetails.getUsername()).orElseThrow();
+
+        if(realUsers == users) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
