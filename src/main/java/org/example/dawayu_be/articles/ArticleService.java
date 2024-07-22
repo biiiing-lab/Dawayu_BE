@@ -4,11 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
-import org.example.dawayu_be.articles.dto.ArticleAllResponse;
-import org.example.dawayu_be.articles.dto.ArticleDetailResponse;
-import org.example.dawayu_be.articles.dto.ArticleRequest;
-import org.example.dawayu_be.articles.dto.ArticleUpdateRequest;
+import org.example.dawayu_be.articles.dto.*;
 import org.example.dawayu_be.global.StatusResponse;
+import org.example.dawayu_be.replies.CommentRepository;
+import org.example.dawayu_be.replies.Comments;
 import org.example.dawayu_be.users.Users;
 import org.example.dawayu_be.users.UsersRepository;
 import org.springframework.http.HttpStatus;
@@ -21,13 +20,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ArticleService {
     private final UsersRepository usersRepository;
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public ResponseEntity<StatusResponse> register(ArticleRequest articleRequest) {
@@ -46,10 +46,21 @@ public class ArticleService {
         return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "게시글 등록 성공"));
     }
 
+    // 게시글 세부 내용 + 댓글
     @Transactional
     public ResponseEntity<ArticleDetailResponse> detail(Long articleNo) {
         Articles articles = articleRepository.findById(articleNo).orElseThrow();
         Users users = articles.getUserNo();
+        List<Comments> articleComments = commentRepository.findAllByArticleNoOrderByCommentRegisterDateDesc(articles);
+
+        // 댓글을 DTO로 변환
+        List<ArticleDetailCommentsResponse> commentResponses = articleComments.stream()
+                .map(comment -> ArticleDetailCommentsResponse.builder()
+                        .comment(comment.getContent())
+                        .commentUserNickname(comment.getUserNo().getNickName())
+                        .commentCreatedAt(comment.getCommentRegisterDate())
+                        .build())
+                .collect(Collectors.toList());
 
         ArticleDetailResponse response = ArticleDetailResponse.builder()
                 .title(articles.getTitle())
@@ -57,6 +68,7 @@ public class ArticleService {
                 .likesCount(articles.getLikesCount())
                 .createdAt(articles.getPostRegisterDate())
                 .nickName(users.getNickName())
+                .comments(commentResponses)
                 .build();
 
         return ResponseEntity.ok(response);
@@ -78,6 +90,7 @@ public class ArticleService {
     @Transactional
     public ResponseEntity<StatusResponse> update(Long articleNo, ArticleUpdateRequest updateRequest) {
         Articles articles = articleRepository.findById(articleNo).orElseThrow();
+
         if (checkAuth(articles.getUserNo())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "수정할 수 없습니다."));
         }
