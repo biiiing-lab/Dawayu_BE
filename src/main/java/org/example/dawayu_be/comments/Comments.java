@@ -1,4 +1,4 @@
-package org.example.dawayu_be.replies;
+package org.example.dawayu_be.comments;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

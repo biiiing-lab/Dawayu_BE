@@ -3,7 +3,6 @@ package org.example.dawayu_be.articles.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.example.dawayu_be.replies.Comments;
 
 import java.time.LocalDateTime;
 import java.util.List;

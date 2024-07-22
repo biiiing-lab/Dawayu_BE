@@ -1,4 +1,4 @@
-package org.example.dawayu_be.replies.dto;
+package org.example.dawayu_be.comments.dto;
 
 import lombok.Builder;
 import lombok.Getter;

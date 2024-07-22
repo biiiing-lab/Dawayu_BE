@@ -1,11 +1,11 @@
-package org.example.dawayu_be.replies;
+package org.example.dawayu_be.comments;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dawayu_be.articles.ArticleRepository;
 import org.example.dawayu_be.articles.Articles;
 import org.example.dawayu_be.global.StatusResponse;
-import org.example.dawayu_be.replies.dto.CommentRequest;
-import org.example.dawayu_be.replies.dto.CommentUpdateRequest;
+import org.example.dawayu_be.comments.dto.CommentRequest;
+import org.example.dawayu_be.comments.dto.CommentUpdateRequest;
 import org.example.dawayu_be.users.Users;
 import org.example.dawayu_be.users.UsersRepository;
 import org.springframework.http.HttpStatus;

@@ -1,9 +1,9 @@
-package org.example.dawayu_be.replies;
+package org.example.dawayu_be.comments;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dawayu_be.global.StatusResponse;
-import org.example.dawayu_be.replies.dto.CommentRequest;
-import org.example.dawayu_be.replies.dto.CommentUpdateRequest;
+import org.example.dawayu_be.comments.dto.CommentRequest;
+import org.example.dawayu_be.comments.dto.CommentUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

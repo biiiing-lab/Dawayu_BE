@@ -1,4 +1,4 @@
-package org.example.dawayu_be.replies;
+package org.example.dawayu_be.comments;
 
 import org.example.dawayu_be.articles.Articles;
 import org.springframework.data.jpa.repository.JpaRepository;
