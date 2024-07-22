@@ -40,4 +40,14 @@ public class Articles {
         this.content = content;
     }
 
+    public void likeCount() {
+        this.likesCount += 1;
+    }
+
+    public void discountLike() {
+        this.likesCount -= 1;
+    }
+
+
+
 }
