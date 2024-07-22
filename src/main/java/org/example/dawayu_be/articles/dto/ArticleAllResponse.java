@@ -15,4 +15,5 @@ public class ArticleAllResponse {
     private String title;
     private String nickName;
     private LocalDateTime createdAt;
+    private int likeCount;
 }

@@ -77,7 +77,8 @@ public class ArticleService {
                 .map(article -> new ArticleAllResponse(
                         article.getTitle(),
                         article.getUserNo().getNickName(),
-                        article.getPostRegisterDate()))
+                        article.getPostRegisterDate(),
+                        article.getLikesCount()))
                 .toList();
 
         return ResponseEntity.ok(responses);
