@@ -76,6 +76,7 @@ public class PostService {
 
         List<PostsAllResponse> responses = post.stream()
                 .map(posts -> new PostsAllResponse(
+                        posts.getPostNo(),
                         posts.getTitle(),
                         posts.getPostRegisterDate(),
                         posts.getUserNo().getNickName(),

@@ -36,7 +36,7 @@ public class LikeService {
         Users users = usersRepository.findByUserId(userDetails.getUsername()).orElseThrow();
         Posts posts = postRepository.findById(postNo).orElseThrow();
 
-        boolean likesCheck = likeRepository.existsByUserNoAndArticleNo(users, posts);
+        boolean likesCheck = likeRepository.existsByUserNoAndPostNo(users, posts);
 
         if(likesCheck) {
             return  ResponseEntity.ok(new StatusResponse(HttpStatus.BAD_GATEWAY.value(), "이미 좋아요를 눌렀습니다."));
@@ -60,7 +60,7 @@ public class LikeService {
         Users realUsers = usersRepository.findByUserId(userDetails.getUsername()).orElseThrow();
 
         Posts posts = postRepository.findById(postNo).orElseThrow();
-        Optional<Likes> likes = likeRepository.findByArticleNoAndUserNo(posts, realUsers);
+        Optional<Likes> likes = likeRepository.findByPostNoAndUserNo(posts, realUsers);
 
         if (likes.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusResponse(HttpStatus.NOT_FOUND.value(), "좋아요 기록을 찾을 수 없습니다."));

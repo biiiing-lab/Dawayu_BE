@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class PostsAllResponse {
+    private Long postNo;
     private String title;
     private LocalDateTime createdAt;
     private String username;
