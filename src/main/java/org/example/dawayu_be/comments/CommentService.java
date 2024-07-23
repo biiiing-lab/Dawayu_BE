@@ -1,8 +1,8 @@
 package org.example.dawayu_be.comments;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dawayu_be.articles.ArticleRepository;
-import org.example.dawayu_be.articles.Articles;
+import org.example.dawayu_be.posts.PostRepository;
+import org.example.dawayu_be.posts.Posts;
 import org.example.dawayu_be.global.StatusResponse;
 import org.example.dawayu_be.comments.dto.CommentRequest;
 import org.example.dawayu_be.comments.dto.CommentUpdateRequest;
@@ -20,12 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentService {
     private final UsersRepository usersRepository;
-    private final ArticleRepository articleRepository;
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
     // 댓글 작성
     @Transactional
-    public ResponseEntity<StatusResponse> register(Long articleNo, CommentRequest commentRequest) {
+    public ResponseEntity<StatusResponse> register(Long postNo, CommentRequest commentRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -34,9 +34,9 @@ public class CommentService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Users users = usersRepository.findByUserId(userDetails.getUsername()).orElseThrow();
-        Articles articles = articleRepository.findById(articleNo).orElseThrow();
+        Posts posts = postRepository.findById(postNo).orElseThrow();
 
-        Comments comments = commentRequest.toEntity(users, articles);
+        Comments comments = commentRequest.toEntity(users, posts);
         commentRepository.save(comments);
 
         return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "댓글 등록 성공"));

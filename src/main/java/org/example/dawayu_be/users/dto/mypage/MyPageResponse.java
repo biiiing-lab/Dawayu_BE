@@ -13,5 +13,5 @@ import java.util.List;
 @Builder
 public class MyPageResponse {
     List<MyPostsResponse> posts;
-    List<MyLikesResponse> liked;
+    List<MyLikesResponse> likedPosts;
 }

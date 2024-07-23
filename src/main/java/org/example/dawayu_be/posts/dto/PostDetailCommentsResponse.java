@@ -1,4 +1,4 @@
-package org.example.dawayu_be.articles.dto;
+package org.example.dawayu_be.posts.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @Builder
-public class ArticleDetailCommentsResponse {
+public class PostDetailCommentsResponse {
     private String comment;
     private String commentUserNickname;
     private LocalDateTime commentCreatedAt;

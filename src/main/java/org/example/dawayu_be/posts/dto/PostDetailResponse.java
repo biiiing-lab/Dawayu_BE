@@ -1,4 +1,4 @@
-package org.example.dawayu_be.articles.dto;
+package org.example.dawayu_be.posts.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,12 +10,12 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 @Builder
-public class ArticleDetailResponse {
+public class PostDetailResponse {
     private final String title;
     private final String content;
-    private final String nickName;
+    private final String username;
     private final LocalDateTime createdAt;
     private final int likesCount;
-    private final List<ArticleDetailCommentsResponse> comments;
+    private final List<PostDetailCommentsResponse> comments;
 
 }

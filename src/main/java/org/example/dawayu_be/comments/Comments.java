@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.dawayu_be.articles.Articles;
+import org.example.dawayu_be.posts.Posts;
 import org.example.dawayu_be.users.Users;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,8 +34,8 @@ public class Comments {
     private Users userNo;
 
     @ManyToOne
-    @JoinColumn(name = "articleNo")
-    private Articles articleNo;
+    @JoinColumn(name = "postNo")
+    private Posts postNo;
 
     public void update(String content) {
         this.content = content;

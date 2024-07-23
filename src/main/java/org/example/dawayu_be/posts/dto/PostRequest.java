@@ -1,19 +1,18 @@
-package org.example.dawayu_be.articles.dto;
+package org.example.dawayu_be.posts.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.example.dawayu_be.articles.Articles;
+import org.example.dawayu_be.posts.Posts;
 import org.example.dawayu_be.users.Users;
 
 @Data
 @RequiredArgsConstructor
-public class ArticleRequest {
+public class PostRequest {
     private String title;
     private String content;
 
-    public Articles toEntity(Users users) {
-        return Articles.builder()
+    public Posts toEntity(Users users) {
+        return Posts.builder()
                 .title(title)
                 .content(content)
                 .userNo(users)

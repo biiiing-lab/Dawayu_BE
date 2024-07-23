@@ -1,8 +1,8 @@
 package org.example.dawayu_be.users;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dawayu_be.articles.ArticleRepository;
-import org.example.dawayu_be.articles.Articles;
+import org.example.dawayu_be.posts.PostRepository;
+import org.example.dawayu_be.posts.Posts;
 import org.example.dawayu_be.jwt.JwtTokenProvider;
 import org.example.dawayu_be.likes.LikeRepository;
 import org.example.dawayu_be.likes.Likes;
@@ -32,7 +32,7 @@ public class UsersService {
 
     private final JwtTokenProvider tokenProvider;
     private final UsersRepository usersRepository;
-    private final ArticleRepository articleRepository;
+    private final PostRepository postRepository;
     private final LikeRepository likeRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -76,7 +76,7 @@ public class UsersService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Users realUsers = usersRepository.findByUserId(userDetails.getUsername()).orElseThrow();
 
-        List<Articles> articles = articleRepository.findByUserNo(realUsers); // 현재 로그인 된 유저 정보로 작성한 게시글 찾기
+        List<Posts> articles = postRepository.findByUserNo(realUsers); // 현재 로그인 된 유저 정보로 작성한 게시글 찾기
         List<Likes> likes = likeRepository.findByUserNo(realUsers) ; // 현재 로그인 된 유저 정보로 좋아요 한 게시글 찾기
 
         List<MyPostsResponse> postsResponses = articles.stream()
@@ -87,12 +87,12 @@ public class UsersService {
 
         List<MyLikesResponse> likesResponses = likes.stream()
                 .map(myLikes -> new MyLikesResponse(
-                        myLikes.getArticleNo().getTitle()
+                        myLikes.getPostNo().getTitle()
                 )).collect(Collectors.toList());
 
         MyPageResponse pageResponse = MyPageResponse.builder()
                 .posts(postsResponses)
-                .liked(likesResponses)
+                .likedPosts(likesResponses)
                 .build();
 
         return ResponseEntity.ok(pageResponse);

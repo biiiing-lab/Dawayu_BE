@@ -1,4 +1,4 @@
-package org.example.dawayu_be.articles;
+package org.example.dawayu_be.posts;
 
 
 import jakarta.persistence.*;
@@ -12,16 +12,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-@Table(name = "articles")
+@Table(name = "posts")
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Articles {
+public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long articleNo;
+    private Long postNo;
 
     private String title;
     private String content;

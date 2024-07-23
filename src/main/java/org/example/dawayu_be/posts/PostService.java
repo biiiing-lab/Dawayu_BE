@@ -1,7 +1,7 @@
-package org.example.dawayu_be.articles;
+package org.example.dawayu_be.posts;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dawayu_be.articles.dto.*;
+import org.example.dawayu_be.posts.dto.*;
 import org.example.dawayu_be.global.StatusResponse;
 import org.example.dawayu_be.comments.CommentRepository;
 import org.example.dawayu_be.comments.Comments;
@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ArticleService {
+public class PostService {
     private final UsersRepository usersRepository;
-    private final ArticleRepository articleRepository;
+    private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
     @Transactional
-    public ResponseEntity<StatusResponse> register(ArticleRequest articleRequest) {
+    public ResponseEntity<StatusResponse> register(PostRequest postRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -36,34 +36,34 @@ public class ArticleService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Users users = usersRepository.findByUserId(userDetails.getUsername()).orElseThrow();
 
-        Articles articles = articleRequest.toEntity(users);
-        articleRepository.save(articles);
+        Posts posts = postRequest.toEntity(users);
+        postRepository.save(posts);
 
         return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "게시글 등록 성공"));
     }
 
     // 게시글 세부 내용 + 댓글
     @Transactional
-    public ResponseEntity<ArticleDetailResponse> detail(Long articleNo) {
-        Articles articles = articleRepository.findById(articleNo).orElseThrow();
-        Users users = articles.getUserNo();
-        List<Comments> articleComments = commentRepository.findAllByArticleNoOrderByCommentRegisterDateDesc(articles);
+    public ResponseEntity<PostDetailResponse> detail(Long articleNo) {
+        Posts posts = postRepository.findById(articleNo).orElseThrow();
+        Users users = posts.getUserNo();
+        List<Comments> articleComments = commentRepository.findAllByPostNoOrderByCommentRegisterDateDesc(posts);
 
         // 댓글을 DTO로 변환
-        List<ArticleDetailCommentsResponse> commentResponses = articleComments.stream()
-                .map(comment -> ArticleDetailCommentsResponse.builder()
+        List<PostDetailCommentsResponse> commentResponses = articleComments.stream()
+                .map(comment -> PostDetailCommentsResponse.builder()
                         .comment(comment.getContent())
                         .commentUserNickname(comment.getUserNo().getNickName())
                         .commentCreatedAt(comment.getCommentRegisterDate())
                         .build())
                 .collect(Collectors.toList());
 
-        ArticleDetailResponse response = ArticleDetailResponse.builder()
-                .title(articles.getTitle())
-                .content(articles.getContent())
-                .likesCount(articles.getLikesCount())
-                .createdAt(articles.getPostRegisterDate())
-                .nickName(users.getNickName())
+        PostDetailResponse response = PostDetailResponse.builder()
+                .title(posts.getTitle())
+                .content(posts.getContent())
+                .likesCount(posts.getLikesCount())
+                .createdAt(posts.getPostRegisterDate())
+                .username(users.getNickName())
                 .comments(commentResponses)
                 .build();
 
@@ -71,40 +71,41 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<List<ArticleAllResponse>> all() {
-        List<Articles> articles = articleRepository.findAllByOrderByPostRegisterDateDesc();
+    public ResponseEntity<List<PostsAllResponse>> all() {
+        List<Posts> post = postRepository.findAllByOrderByPostRegisterDateDesc();
 
-        List<ArticleAllResponse> responses = articles.stream()
-                .map(article -> new ArticleAllResponse(
-                        article.getTitle(),
-                        article.getUserNo().getNickName(),
-                        article.getPostRegisterDate(),
-                        article.getLikesCount()))
+        List<PostsAllResponse> responses = post.stream()
+                .map(posts -> new PostsAllResponse(
+                        posts.getTitle(),
+                        posts.getPostRegisterDate(),
+                        posts.getUserNo().getNickName(),
+                        posts.getLikesCount()
+                ))
                 .toList();
 
         return ResponseEntity.ok(responses);
     }
 
     @Transactional
-    public ResponseEntity<StatusResponse> update(Long articleNo, ArticleUpdateRequest updateRequest) {
-        Articles articles = articleRepository.findById(articleNo).orElseThrow();
+    public ResponseEntity<StatusResponse> update(Long postNo, PostUpdateRequest updateRequest) {
+        Posts posts = postRepository.findById(postNo).orElseThrow();
 
-        if (checkAuth(articles.getUserNo())) {
+        if (checkAuth(posts.getUserNo())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "수정할 수 없습니다."));
         }
 
-        articles.update(updateRequest.getTitle(), updateRequest.getContent());
+        posts.update(updateRequest.getTitle(), updateRequest.getContent());
        return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "게시글 수정 성공"));
     }
 
     @Transactional
-    public ResponseEntity<StatusResponse> delete(Long articleNo) {
-        Articles articles = articleRepository.findById(articleNo).orElseThrow();
-        if (checkAuth(articles.getUserNo())) {
+    public ResponseEntity<StatusResponse> delete(Long postNo) {
+        Posts posts = postRepository.findById(postNo).orElseThrow();
+        if (checkAuth(posts.getUserNo())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new StatusResponse(HttpStatus.UNAUTHORIZED.value(), "삭제할 수 없습니다."));
         }
 
-        articleRepository.deleteById(articleNo);
+        postRepository.deleteById(postNo);
         return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "게시글 삭제 성공"));
     }
 

@@ -14,22 +14,22 @@ public class CommentController {
     private final CommentService commentService;
 
     // 등록
-    @PostMapping("/posts/{articleNo}/comments")
-    public ResponseEntity<StatusResponse> register(@PathVariable Long articleNo, @RequestBody CommentRequest commentRequest) {
-        return commentService.register(articleNo, commentRequest);
+    @PostMapping("/posts/{postNo}/comments")
+    public ResponseEntity<StatusResponse> register(@PathVariable Long postNo, @RequestBody CommentRequest commentRequest) {
+        return commentService.register(postNo, commentRequest);
     }
 
     // 수정
-    @PutMapping("/posts/{articleNo}/update-comment/{commentNo}")
-    public ResponseEntity<StatusResponse> update(@PathVariable Long articleNo,
+    @PutMapping("/posts/{postNo}/update-comment/{commentNo}")
+    public ResponseEntity<StatusResponse> update(@PathVariable Long postNo,
                                                  @PathVariable Long commentNo,
                                                  @RequestBody CommentUpdateRequest commentUpdateRequest) {
         return commentService.update(commentNo, commentUpdateRequest);
     }
 
     // 삭제
-    @DeleteMapping("/posts/{articleNo}/delete-comment/{commentNo}")
-    public ResponseEntity<StatusResponse> delete(@PathVariable Long articleNo,
+    @DeleteMapping("/posts/{postNo}/delete-comment/{commentNo}")
+    public ResponseEntity<StatusResponse> delete(@PathVariable Long postNo,
                                                  @PathVariable Long commentNo) {
         return commentService.delete(commentNo);
     }

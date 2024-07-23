@@ -1,19 +1,16 @@
-package org.example.dawayu_be.articles.dto;
+package org.example.dawayu_be.posts.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Data
 @AllArgsConstructor
-public class ArticleAllResponse {
+public class PostsAllResponse {
     private String title;
-    private String nickName;
     private LocalDateTime createdAt;
+    private String username;
     private int likeCount;
 }
