@@ -15,7 +15,7 @@ public class CommentRequest {
         return Comments.builder()
                 .content(content)
                 .userNo(users)
-                .articleNo(posts)
+                .postNo(posts)
                 .build();
     }
 }
