@@ -1,18 +1,30 @@
 package org.example.dawayu_be.users;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dawayu_be.articles.ArticleRepository;
+import org.example.dawayu_be.articles.Articles;
 import org.example.dawayu_be.jwt.JwtTokenProvider;
+import org.example.dawayu_be.likes.LikeRepository;
+import org.example.dawayu_be.likes.Likes;
 import org.example.dawayu_be.users.dto.JoinRequest;
 import org.example.dawayu_be.users.dto.LoginRequest;
 import org.example.dawayu_be.global.StatusResponse;
+import org.example.dawayu_be.users.dto.mypage.MyLikesResponse;
+import org.example.dawayu_be.users.dto.mypage.MyPageResponse;
+import org.example.dawayu_be.users.dto.mypage.MyPostsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +32,8 @@ public class UsersService {
 
     private final JwtTokenProvider tokenProvider;
     private final UsersRepository usersRepository;
+    private final ArticleRepository articleRepository;
+    private final LikeRepository likeRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -49,5 +63,39 @@ public class UsersService {
         usersRepository.save(users);
 
         return ResponseEntity.ok(new StatusResponse(HttpStatus.OK.value(), "회원가입 성공"));
+    }
+
+    @Transactional
+    public ResponseEntity<MyPageResponse> all() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Users realUsers = usersRepository.findByUserId(userDetails.getUsername()).orElseThrow();
+
+        List<Articles> articles = articleRepository.findByUserNo(realUsers); // 현재 로그인 된 유저 정보로 작성한 게시글 찾기
+        List<Likes> likes = likeRepository.findByUserNo(realUsers) ; // 현재 로그인 된 유저 정보로 좋아요 한 게시글 찾기
+
+        List<MyPostsResponse> postsResponses = articles.stream()
+                .map(myPosts -> new MyPostsResponse(
+                        myPosts.getTitle(),
+                        myPosts.getPostRegisterDate()
+                )).collect(Collectors.toList());
+
+        List<MyLikesResponse> likesResponses = likes.stream()
+                .map(myLikes -> new MyLikesResponse(
+                        myLikes.getArticleNo().getTitle()
+                )).collect(Collectors.toList());
+
+        MyPageResponse pageResponse = MyPageResponse.builder()
+                .posts(postsResponses)
+                .liked(likesResponses)
+                .build();
+
+        return ResponseEntity.ok(pageResponse);
+
     }
 }

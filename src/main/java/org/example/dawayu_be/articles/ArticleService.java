@@ -73,6 +73,7 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public ResponseEntity<List<ArticleAllResponse>> all() {
         List<Articles> articles = articleRepository.findAllByOrderByPostRegisterDateDesc();
+
         List<ArticleAllResponse> responses = articles.stream()
                 .map(article -> new ArticleAllResponse(
                         article.getTitle(),

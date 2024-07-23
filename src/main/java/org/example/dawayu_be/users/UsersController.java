@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.dawayu_be.users.dto.JoinRequest;
 import org.example.dawayu_be.users.dto.LoginRequest;
 import org.example.dawayu_be.global.StatusResponse;
+import org.example.dawayu_be.users.dto.mypage.MyLikesResponse;
+import org.example.dawayu_be.users.dto.mypage.MyPageResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +28,11 @@ public class UsersController {
     @PostMapping("/signup")
     public ResponseEntity<StatusResponse> signUp(@RequestBody JoinRequest joinRequest) {
         return usersService.signUp(joinRequest);
+    }
+
+    @GetMapping("/mypage")
+    public ResponseEntity<MyPageResponse> all() {
+        return usersService.all();
     }
 
 }
