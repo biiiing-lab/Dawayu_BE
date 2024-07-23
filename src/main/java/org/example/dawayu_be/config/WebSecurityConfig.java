@@ -24,11 +24,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtTokenProvider tokenProvider;
-    private final CorsConfig corsConfig;
-
+    private final CorsConfig corsConfig;  // CorsConfig 주입
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, CorsConfig corsConfig) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
@@ -41,7 +40,7 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-//                .cors((Customizer<CorsConfigurer<HttpSecurity>>) corsConfig)   // todo cors
+                .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .build();
     }
 
