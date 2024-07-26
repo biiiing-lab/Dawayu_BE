@@ -8,3 +8,10 @@
 2024.07.19 ~ 2024.07.26
 
 ## FE Repository
+https://github.com/biiiing-lab/Dawayu_FE.git
+
+## function
+1. User security + jwt(access token)
+2. Post CRUD
+3. Comment CRUD
+4. Like CD
